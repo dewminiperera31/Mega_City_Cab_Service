@@ -16,7 +16,6 @@
 * userID:cust1,role:USER,password:123
 * userID:cust2,role:USER,password:123
 
-## Demo Video Link: https://www.youtube.com/watch?v=5x5gmJEXhVY
 
 # Admin EndPoints
 * Home - localhost:8080/
