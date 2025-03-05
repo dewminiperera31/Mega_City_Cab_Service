@@ -1,0 +1,25 @@
+
+<nav class="navbar navbar-expand-md navbar-light bg-light mb-3 p-1">
+	<div class="collapse navbar-collapse navbar-dark bg-secondary">
+		<ul class="navbar-nav">
+			<li class="nav-item"><a class="nav-link" href="/"><b>Home</b></a></li>
+			<sec:authorize access="hasAuthority('ADMIN')">
+			<li class="nav-item"><a class="nav-link" href="/list-cabs"><b>Cab List</b></a></li>
+			<li class="nav-item"><a class="nav-link" href="/list-drivers"><b>Drivers</b></a></li>
+
+			<li class="nav-item"><a class="nav-link" href="/users"><b>Users</b></a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-booking-list"><b>Bookings </b></a></li>
+
+
+			</sec:authorize>
+			<sec:authorize access="hasAuthority('USER')">
+            			<li class="nav-item"><a class="nav-link" href="/add-booking"><b>Book a Cab</b></a></li>
+            			<li class="nav-item"><a class="nav-link" href="/booking-list"><b>Bookings</b></a></li>
+
+            </sec:authorize>
+		</ul>
+	</div>
+	<ul class="navbar-nav">
+		<li class="nav-item"><a class="nav-link" href="/logout"><b>Logout</b></a></li>
+	</ul>
+</nav>
