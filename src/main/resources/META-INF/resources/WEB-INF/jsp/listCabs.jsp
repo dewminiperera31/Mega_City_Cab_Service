@@ -1,12 +1,29 @@
 
 	<%@ include file="common/header.jspf" %>
+	<%-- ✅ Success message --%>
+
+    <%-- ✅ Success message --%>
+    <c:if test="${not empty successMessage}">
+        <div class="alert alert-success" id="successMessage">${successMessage}</div>
+    </c:if>
+
+    <%-- ✅ JavaScript to hide message after 3 seconds --%>
+    <script>
+        setTimeout(function() {
+            var message = document.getElementById("successMessage");
+            if (message) {
+                message.style.display = "none";
+            }
+        }, 3000); // 3000ms = 3 seconds
+    </script>
+
     <%@ include file="common/navigation.jspf" %>
 		<div class="container">
-			<h1>List of Cars</h1>
+			<h1>Cab List</h1>
 			<table class="table">
 				<thead>
 					<tr>
-						<th>Car Id</th>
+						<th>Cab Id</th>
 						<th>Model</th>
 						<th>Color</th>
 						<th>Seating Capacity</th>
@@ -29,6 +46,6 @@
 					</c:forEach>
 				</tbody>
 			</table>
-			<a href="add-car" class="btn btn-success">Add Car</a>
+			<a href="add-cab" class="btn btn-success">Add Cab</a>
 		</div>
 		<%@ include file="common/footer.jspf" %>

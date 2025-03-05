@@ -42,8 +42,8 @@ public class BookingController {
         carRepository.save(car);
         bookingRepository.save(newBooking);
         String cancelCarUrl="localhost:8080/cancel-car?bookingId="+newBooking.getId();
-        BookingDetailDao bookingDetailDao=new BookingDetailDao(newBooking,cancelCarUrl);
-        return bookingDetailDao;
+        BookingDetailDao BookingDetailDao=new BookingDetailDao(newBooking,cancelCarUrl);
+        return BookingDetailDao;
     }
 
     @RequestMapping("cancel-car")
@@ -64,4 +64,30 @@ public class BookingController {
         bookingRepository.deleteById(bookingId);
         return new ResponseEntity<>("<h1>Booking Canceled Successfully</h1>", HttpStatus.OK);
     }
+
+
+
+
+
+    @GetMapping("/booked-cars")
+    public String showBookedCars(ModelMap model) {
+        List<Booking> bookings = bookingRepository.findAll();
+
+        // Debugging logs
+        System.out.println("🚀 Fetching booked cars...");
+        System.out.println("✅ Found " + bookings.size() + " bookings!");
+
+        for (Booking booking : bookings) {
+            System.out.println("📌 Booking ID: " + booking.getId() +
+                    ", Car ID: " + booking.getCarId() +
+                    ", Driver ID: " + booking.getDriverId() +
+                    ", Status: " + booking.getStatus() +
+                    ", Username: " + booking.getUsername());
+        }
+
+        model.addAttribute("car_requests", bookings);
+        return "listCarRequests"; // This should match your JSP file
+    }
+
+
 }

@@ -16,7 +16,6 @@
 * userID:cust1,role:USER,password:123
 * userID:cust2,role:USER,password:123
 
-## Demo Video Link: https://www.youtube.com/watch?v=5x5gmJEXhVY
 
 # Admin EndPoints
 * Home - localhost:8080/
@@ -36,3 +35,6 @@
 * Only 3 capacities allowed in the system ( 3,4,5), throws exception if not in the range.
 * Database scheme diagram is also present (Location: cab-service/Database Schema Diagram.png.
 
+
+## Note2
+#server.port=8081

@@ -9,7 +9,8 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy
+            = GenerationType.IDENTITY)
     private Integer id;
     private String username;
     private String password;
@@ -22,6 +23,8 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
+
 
     public Integer getId() {
         return id;

@@ -1,9 +1,14 @@
 <%@ include file="common/header.jspf" %>
+
+<c:if test="${not empty errorMessage}">
+    <div class="alert alert-danger">${errorMessage}</div>
+</c:if>
+
 <%@ include file="common/navigation.jspf" %>
 
 <div class="container">
 
-	<h1>Enter Car Details</h1>
+	<h1>Enter Cab Details</h1>
 
 	<form:form method="post" modelAttribute="car">
 

@@ -64,8 +64,16 @@ public class CarRequestController {
     @RequestMapping("list-car-requests")
     public String listAllCarRequests(ModelMap modelMap) {
         List<CarRequest> carRequests=carRequestRepository.findAll();
+
+        // ✅ Debugging: Print to console
+        System.out.println("Car Requests Found: " + carRequests.size());
+        for (CarRequest cr : carRequests) {
+            System.out.println("Request ID: " + cr.getId() + ", Driver ID: " + cr.getDriverId() + ", Car ID: " + cr.getCarId() + ", Status: " + cr.getRequestStatus());
+        }
+
         modelMap.put("car_requests",carRequests);
         return "listCarRequests";
     }
 
 }
+
