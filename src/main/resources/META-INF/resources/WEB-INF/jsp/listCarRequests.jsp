@@ -1,8 +1,10 @@
 
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 	<%@ include file="common/header.jspf" %>
     <%@ include file="common/navigation.jspf" %>
 		<div class="container">
-			<h1>List of Cars</h1>
+			<h1>Cab Bookings</h1>
 			<table class="table">
 				<thead>
 					<tr>
@@ -15,12 +17,20 @@
 					</tr>
 				</thead>
 				<tbody>
+				 <!-- ✅ Show message if there are no car requests -->
+                            <c:if test="${empty car_requests}">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: red;">
+                                        No car requests found.
+                                    </td>
+                                </tr>
+                            </c:if>
 					<c:forEach items="${car_requests}" var="cr">
 						<tr>
 							<td>${cr.id}</td>
-							<td>${cr.driverId}</td>
-							<td>${cr.carId}</td>
-							<td>${cr.requestStatus}</td>
+							<td>${cr.driver_id}</td>
+							<td>${cr.car_id}</td>
+							<td>${cr.status}</td>
                             <td><a href="approve-request?requestId=${cr.id}&driverId=${cr.driverId}&carId=${cr.carId}" class="btn btn-warning">Approve</a></td>
                             <td><a href="reject-request?requestId=${cr.id}" class="btn btn-warning">Reject</a></td>
 						</tr>

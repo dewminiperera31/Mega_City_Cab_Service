@@ -1,12 +1,15 @@
 package com.assignment.cabservice.dao;
 
 import com.assignment.cabservice.model.Booking;
+import org.springframework.stereotype.Component;
 
+@Component  // Makes it a Spring-managed bean (only if needed)
 public class BookingDetailDao {
     private Booking booking;
     private String cancelUrl;
 
-    BookingDetailDao() {}
+    // Public default constructor
+    public BookingDetailDao() {}
 
     public BookingDetailDao(Booking booking, String cancelUrl) {
         this.booking = booking;

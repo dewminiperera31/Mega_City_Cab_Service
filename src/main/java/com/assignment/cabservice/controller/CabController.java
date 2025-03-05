@@ -1,4 +1,5 @@
 package com.assignment.cabservice.controller;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.assignment.cabservice.exception.InvalidSeatingCapacityException;
 import com.assignment.cabservice.model.Car;
@@ -8,25 +9,23 @@ import com.assignment.cabservice.repository.DriverRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
-public class CarController {
+public class CabController {
 
     @Autowired
     private CarRepository carRepository;
     @Autowired
     private DriverRepository driverRepository;
 
-    @RequestMapping("list-cars")
+    @RequestMapping("list-cabs")
     public String listAllCars(ModelMap modelMap) {
         List<Car> cars=carRepository.findAll();
         modelMap.put("cars",cars);
-        return "listCars";
+        return "listCabs";
     }
 
     @RequestMapping("list-available-cars")
@@ -36,29 +35,32 @@ public class CarController {
         return "listCarsAvailableForBooking";
     }
 
-    @RequestMapping(value="add-car",method= RequestMethod.GET)
+    @RequestMapping(value="add-cab",method= RequestMethod.GET)
     public String showNewCarPage(Car car) {
         return "car";
     }
 
     //public String addNewTodo(@Valid Todo todo, ModelMap modelMap, BindingResult bindingResult) {
-    @RequestMapping(value="add-car",method= RequestMethod.POST)
-    public String addNewCar(Car car) throws Exception {
+    @RequestMapping(value="add-cab",method= RequestMethod.POST)
+    public String addNewCar(Car car,ModelMap modelMap,RedirectAttributes redirectAttributes) throws Exception {
         int capacity=car.getSeatingCapacity();
-        if(capacity!=3 && capacity!=4 && capacity!=7) {
-            throw  new InvalidSeatingCapacityException("Allowed capacities are: {3,4,7}");
+        if (capacity != 3 && capacity != 4 && capacity != 7) {
+            modelMap.put("errorMessage", "❌ Allowed seating capacities: 3, 4, or 7 seats.");
+            return "car"; // Return to the same form page to show the error
         }
 
         car.setAvailableForBooking(true);
         carRepository.save(car);
-        return "redirect:list-cars";
+        redirectAttributes.addFlashAttribute("successMessage", "✅ Cab added successfully!");
+        return "redirect:/list-cabs";
     }
 
     //http://localhost:8080/delete-car?id=502
     @RequestMapping(value="delete-car")
-    public String deleteCar(@RequestParam int id) {
+    public String deleteCar(@RequestParam int id, RedirectAttributes redirectAttributes ) {
         carRepository.deleteById(id);
-        return "redirect:list-cars";
+        redirectAttributes.addFlashAttribute("successMessage", "✅ Car deleted successfully!");
+        return "redirect:/list-cabs";
     }
 
 
@@ -80,7 +82,7 @@ public class CarController {
         carRepository.save(previousAssignedCar);
         carRepository.save(car);
         driverRepository.save(driver);
-        return "redirect:/list-cars";
+        return "redirect:/list-cabs";
     }
 
     /*@GetMapping(path="/jpa/users/{id}/posts")
