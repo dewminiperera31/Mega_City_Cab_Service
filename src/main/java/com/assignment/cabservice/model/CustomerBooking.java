@@ -13,6 +13,9 @@ public class CustomerBooking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private double fare;
+
+
     @Column(unique = true, nullable = false)
     private String orderNumber;
 
@@ -21,6 +24,9 @@ public class CustomerBooking {
 
     @Column(nullable = false)
     private String address;
+    @ManyToOne
+    @JoinColumn(name = "customer_id") // Ensure the foreign key is set up correctly
+    private User customer; // Assuming 'User' is your customer entity
 
     @Column(nullable = false)
     private String telephone;
@@ -50,10 +56,27 @@ public class CustomerBooking {
             this.orderNumber = "ORD-" + UUID.randomUUID().toString().substring(0, 8); // Generate unique order number
         }
     }
+    public CustomerBooking() {}
+
+    public CustomerBooking(double fare, User customer, String status) {
+        this.fare = fare;
+        this.customer = customer;
+        this.status = status;
+    }
 
     // Getters and Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+
+    public double getFare() { return fare; } // ✅ Now this method exists
+
+    public void setFare(double fare) { this.fare = fare; }
+
+    public User getCustomer() { return customer; } // ✅ Now this method exists
+
+    public void setCustomer(User customer) { this.customer = customer; }
+
 
     public String getOrderNumber() { return orderNumber; }
     public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
