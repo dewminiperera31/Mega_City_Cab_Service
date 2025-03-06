@@ -2,6 +2,7 @@
 <%@ include file="common/header.jspf" %>
 <%@ include file="common/navigation.jspf" %>
 
+
 <style>
     .form-group {
         margin-bottom: 15px; /* Adds spacing between input fields */

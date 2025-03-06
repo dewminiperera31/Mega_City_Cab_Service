@@ -24,6 +24,7 @@ public class CustomerBooking {
 
     @Column(nullable = false)
     private String address;
+
     @ManyToOne
     @JoinColumn(name = "customer_id") // Ensure the foreign key is set up correctly
     private User customer; // Assuming 'User' is your customer entity

@@ -10,7 +10,7 @@
             <div class="row mt-4">
                 <div class="col-md-3">
                     <div class="card bg-primary text-white text-center p-3">
-                        <h4>Total Cars</h4>
+                        <h4>Total Cabs</h4>
                         <h2>${totalCars}</h2>
                     </div>
                 </div>
@@ -36,6 +36,22 @@
         </c:when>
 
         <c:when test="${role eq 'USER'}">
+             <div class="row mt-4">
+                             <div class="col-md-3">
+                                 <div class="card bg-primary text-white text-center p-3">
+                                     <h4>Available Cabs</h4>
+                                     <h2>${totalCars}</h2>
+                                 </div>
+                             </div>
+
+
+                                        <div class="col-md-3">
+                                                            <div class="card bg-danger text-white text-center p-3">
+                                                                <h4>New Bookings</h4>
+                                                                <h2>${userBookings}</h2>
+                                                            </div>
+                                                        </div>
+                                                         </div>
             <!-- System Usage Guidelines for Customers -->
             <div class="alert alert-info mt-4">
                 <h3>🚖 System Usage Guidelines</h3>

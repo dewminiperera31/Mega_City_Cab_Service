@@ -13,6 +13,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import com.assignment.cabservice.model.User;
+
 
 import java.util.Collection;
 
@@ -37,6 +39,9 @@ public class WelcomeController {
         String username = getLoggedInUsername();
         String role = getUserRole();
 
+
+
+
         model.put("username", username);
         model.put("role", role);
 
@@ -45,6 +50,15 @@ public class WelcomeController {
         model.put("totalDrivers", driverRepository.count());
         model.put("totalUsers", userRepository.count());
         model.put("totalBookings", bookingRepository.count());
+
+        User loggedInUser = userRepository.findByUsername(username);
+
+        if (loggedInUser != null) {
+            model.put("userBookings", bookingRepository.findByCustomerName(username).size());
+        } else {
+            model.put("userBookings", 0); // Default to 0 if no user found
+        }
+
 
         return "welcome"; // Redirect all users to welcome.jsp
     }
