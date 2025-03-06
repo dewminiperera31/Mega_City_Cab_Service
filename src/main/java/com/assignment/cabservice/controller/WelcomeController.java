@@ -1,5 +1,10 @@
 package com.assignment.cabservice.controller;
 
+import com.assignment.cabservice.repository.CarRepository;
+import com.assignment.cabservice.repository.DriverRepository;
+import com.assignment.cabservice.repository.UserRepository;
+import com.assignment.cabservice.repository.CustomerBookingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,19 +17,36 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import java.util.Collection;
 
 @Controller
-@SessionAttributes({"username", "id"})
+@SessionAttributes({"username", "role"})
 public class WelcomeController {
+
+    @Autowired
+    private CarRepository carRepository;
+
+    @Autowired
+    private DriverRepository driverRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CustomerBookingRepository bookingRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String gotoWelcomePage(ModelMap model) {
         String username = getLoggedInUsername();
-        model.put("username", username);
+        String role = getUserRole();
 
-        if (isAdminUser()) {
-            return "redirect:/admin-dashboard"; // Redirect admin to dashboard
-        } else {
-            return "welcome"; // Normal user welcome page
-        }
+        model.put("username", username);
+        model.put("role", role);
+
+        // Fetch counts from the database
+        model.put("totalCars", carRepository.count());
+        model.put("totalDrivers", driverRepository.count());
+        model.put("totalUsers", userRepository.count());
+        model.put("totalBookings", bookingRepository.count());
+
+        return "welcome"; // Redirect all users to welcome.jsp
     }
 
     private String getLoggedInUsername() {
@@ -32,15 +54,13 @@ public class WelcomeController {
         return authentication.getName();
     }
 
-    private boolean isAdminUser() {
+    private String getUserRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals("ROLE_ADMIN")) { // Check if user has admin role
-                return true;
-            }
+            return authority.getAuthority(); // Return first assigned role (e.g., "ROLE_ADMIN")
         }
-        return false;
+        return "ROLE_USER"; // Default role if no role found
     }
 }
