@@ -59,7 +59,7 @@ public class CabController {
     @RequestMapping(value="delete-car")
     public String deleteCar(@RequestParam int id, RedirectAttributes redirectAttributes ) {
         carRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("successMessage", "✅ Car deleted successfully!");
+        redirectAttributes.addFlashAttribute("successMessage", "✅ Cab deleted successfully!");
         return "redirect:/list-cabs";
     }
 

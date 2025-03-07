@@ -20,32 +20,44 @@
     <%@ include file="common/navigation.jspf" %>
 		<div class="container">
 			<h1>Cab List</h1>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Cab Id</th>
-						<th>Model</th>
-						<th>Color</th>
-						<th>Seating Capacity</th>
-						<th>Available For Booking?</th>
-						<th>DriverId</th>
-                        <th>Delete</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${cars}" var="car">
-						<tr>
-							<td>${car.id}</td>
-							<td>${car.model}</td>
-							<td>${car.color}</td>
-							<td>${car.seatingCapacity}</td>
-							<td>${car.availableForBooking}</td>
-							<td>${car.driverId}</td>
-                            <td><a href="delete-car?id=${car.id}" class="btn btn-warning">Delete</a></td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+			<div class="table-responsive mt-4">
+                <table class="table table-bordered table-striped table-hover align-middle shadow-sm">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>Cab ID</th>
+                            <th>Model</th>
+                            <th>Color</th>
+                            <th>Seating Capacity</th>
+                            <th>Available for Booking?</th>
+                            <th>Driver ID</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${cars}" var="car">
+                            <tr>
+                                <td class="fw-bold text-center">${car.id}</td>
+                                <td>${car.model}</td>
+                                <td>${car.color}</td>
+                                <td class="text-center">${car.seatingCapacity}</td>
+                                <td class="text-center">
+                                    <span class="badge ${car.availableForBooking ? 'bg-success' : 'bg-danger'}">
+                                        ${car.availableForBooking ? 'Yes' : 'No'}
+                                    </span>
+                                </td>
+                                <td class="text-center">${car.driverId != null ? car.driverId : 'Unassigned'}</td>
+                                <td class="text-center">
+                                    <a href="delete-car?id=${car.id}" class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Are you sure you want to delete this car?');">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
 			<a href="add-cab" class="btn btn-success">Add Cab</a>
 		</div>
 		<%@ include file="common/footer.jspf" %>
