@@ -16,7 +16,7 @@
                <tr>
                    <th>Order #</th>
                    <th>Customer</th>
-                   <th>Address</th>
+
                    <th>Phone</th>
                    <th>Destination</th>
                    <th>Pickup</th>
@@ -31,12 +31,13 @@
                    <tr>
                        <td class="fw-semibold text-center">${booking.orderNumber}</td>
                        <td>${booking.customerName}</td>
-                       <td>${booking.address}</td>
+
                        <td>${booking.telephone}</td>
                        <td>${booking.destination}</td>
                        <td>${booking.pickupLocation}</td>
                        <td>${booking.bookingDate}</td>
                        <td>${booking.bookingTime}</td>
+
                        <td class="text-center">
                            <c:choose>
                                <c:when test="${booking.status == 'Pending'}">
@@ -54,6 +55,9 @@
                            </c:choose>
                        </td>
                        <td class="text-center">
+                           <a href="/booking-summary/${booking.id}" class="btn btn-outline-primary btn-sm">
+                               View Summary
+                           </a>
                            <c:if test="${booking.status == 'Pending'}">
                                <form action="/bookings/cancel/${booking.id}" method="post"
                                      onsubmit="return confirm('Are you sure you want to cancel this booking?');">

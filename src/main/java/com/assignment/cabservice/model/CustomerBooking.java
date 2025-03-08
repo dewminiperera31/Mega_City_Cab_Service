@@ -11,7 +11,7 @@ public class CustomerBooking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private double fare;
 
@@ -46,6 +46,23 @@ public class CustomerBooking {
 
     @Column(nullable = false)
     private String pickupLocation;
+    private Double baseFare;
+    private Double tax;
+    private Double totalAmount;
+
+
+        private String name;
+        private String dropLocation;
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDropLocation() {
+            return dropLocation;
+        }
+
+
 
     // Default values before saving
     @PrePersist
@@ -66,8 +83,8 @@ public class CustomerBooking {
     }
 
     // Getters and Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 
 
     public double getFare() { return fare; } // ✅ Now this method exists
@@ -105,4 +122,30 @@ public class CustomerBooking {
 
     public String getPickupLocation() { return pickupLocation; }
     public void setPickupLocation(String pickupLocation) { this.pickupLocation = pickupLocation; }
+
+    public double getBaseFare() {
+        return baseFare;
+    }
+
+    public void setBaseFare(double baseFare) {
+        this.baseFare = baseFare;
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount != null ? totalAmount : 0.0;
+    }
+
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
 }

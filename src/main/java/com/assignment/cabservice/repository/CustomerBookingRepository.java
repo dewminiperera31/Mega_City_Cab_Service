@@ -1,4 +1,5 @@
 package com.assignment.cabservice.repository;
+import com.assignment.cabservice.model.CustomerBooking;
 
 import com.assignment.cabservice.model.CustomerBooking;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -7,13 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import java.security.Principal;
-import java.util.List;
-
-
-
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -22,73 +18,107 @@ public class CustomerBookingController {
     @Autowired
     private CustomerBookingRepository customerBookingRepository;
 
+    // Show booking form
     @RequestMapping("/add-booking")
     public String showBookingForm(Model model) {
         model.addAttribute("booking", new CustomerBooking());
         return "customer-booking";
     }
 
+    // Process booking and redirect to bill summary
     @PostMapping("/add-booking")
     public String addBooking(@ModelAttribute CustomerBooking booking) {
-        // Ensure Order Number is not null
         if (booking.getOrderNumber() == null || booking.getOrderNumber().trim().isEmpty()) {
-            booking.setOrderNumber("ORD-" + System.currentTimeMillis()); // Generate Unique Order Number
+            booking.setOrderNumber("ORD-" + System.currentTimeMillis()); // Unique order number
         }
 
-        // Ensure Status is not null
-        if (booking.getStatus() == null || booking.getStatus().trim().isEmpty()) {
-            booking.setStatus("Pending"); // Default status
-        }
+        booking.setStatus("Pending");
+        booking.setBookingDate(LocalDate.now());
+        booking.setBookingTime(LocalTime.now().withSecond(0).withNano(0));
 
-        // Ensure Booking Date is not null
-        if (booking.getBookingDate() == null) {
-            booking.setBookingDate(LocalDate.now()); // Default to today
-        }
+        // Calculate bill
+        double baseFare = calculateBaseFare(booking.getPickupLocation(), booking.getDestination());
+        double tax = baseFare * 0.1; // 10% tax
+        double totalAmount = baseFare + tax;
 
-        // Ensure Booking Time is not null
-        if (booking.getBookingTime() == null) {
-            booking.setBookingTime(LocalTime.now().withSecond(0).withNano(0)); // Default to now
-        }
+        booking.setBaseFare(baseFare);
+        booking.setTax(tax);
+        booking.setTotalAmount(totalAmount);
 
-        // Ensure Pickup Location is not null
-        if (booking.getPickupLocation() == null || booking.getPickupLocation().trim().isEmpty()) {
-            booking.setPickupLocation("Not Specified"); // Default if not provided
-        }
-
-        // Save the booking to the database
         customerBookingRepository.save(booking);
-
-        return "redirect:/booking-list"; // Redirect to the booking list page
+        return "redirect:/bill-summary/" + booking.getId();
     }
 
+    // Bill summary page
+    @GetMapping("/bill-summary/{id}")
+    public String showBillSummary(@PathVariable Long id, Model model) {
+        Optional<CustomerBooking> bookingOptional = customerBookingRepository.findById(id);
+        if (bookingOptional.isEmpty()) {
+            return "redirect:/booking-list"; // Redirect if booking not found
+        }
+
+        model.addAttribute("booking", bookingOptional.get());
+        return "bill-summary";
+    }
+
+    @PostMapping("/bookings/user-confirm/{id}")
+    public String confirmBookingByUser(@PathVariable Long id) {
+        Optional<CustomerBooking> bookingOptional = customerBookingRepository.findById(id);
+
+        if (bookingOptional.isPresent()) {
+            CustomerBooking booking = bookingOptional.get();
+
+            if ("Pending".equalsIgnoreCase(booking.getStatus())) {
+                booking.setStatus("Pending"); // Keep it as pending for admin approval
+                customerBookingRepository.save(booking);
+            }
+        }
+
+        return "redirect:/booking-list"; // Redirect user to their booking list
+    }
+
+
     @GetMapping("/booking-list")
-    public String showBookings(Model model,Principal principal) {
+    public String showBookings(Model model, Principal principal) {
         if (principal == null) {
             return "redirect:/login"; // Redirect if user is not logged in
         }
 
         String loggedInUsername = principal.getName(); // Get logged-in user's username
         List<CustomerBooking> userBookings = customerBookingRepository.findByCustomerName(loggedInUsername);
-
         model.addAttribute("bookings", userBookings);
+
         return "booking-list";
     }
+    @GetMapping("/booking-summary/{id}")
+    public String viewBookingSummary(@PathVariable Long id, Model model) {
+        Optional<CustomerBooking> bookingOptional = customerBookingRepository.findById(id);
 
-    // Cancel Booking Only if it's "Pending"
+        if (bookingOptional.isPresent()) {
+            model.addAttribute("booking", bookingOptional.get());
+            return "booking-summary"; // This should match your JSP template name
+        }
+
+        return "redirect:/booking-list"; // Redirect if the booking is not found
+    }
+
+    // Cancel booking if it's "Pending"
     @PostMapping("/bookings/cancel/{id}")
     public String cancelBooking(@PathVariable Long id) {
         Optional<CustomerBooking> bookingOptional = customerBookingRepository.findById(id);
-
-
-        if (bookingOptional.isPresent()) {
-            CustomerBooking booking = bookingOptional.get();
-
-            if ("Pending".equalsIgnoreCase(booking.getStatus())) {
-                customerBookingRepository.deleteById(id);
-
-            }
+        if (bookingOptional.isPresent() && "Pending".equalsIgnoreCase(bookingOptional.get().getStatus())) {
+            customerBookingRepository.deleteById(id);
         }
 
         return "redirect:/booking-list";
+    }
+
+    // Method to calculate base fare based on pickup & destination
+    private double calculateBaseFare(String pickup, String destination) {
+        if ("City A".equalsIgnoreCase(pickup) && "City B".equalsIgnoreCase(destination)) {
+            return 100.0;
+        } else {
+            return 150.0;
+        }
     }
 }
